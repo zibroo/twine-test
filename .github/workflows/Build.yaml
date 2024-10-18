@@ -1,0 +1,37 @@
+name: shared_tools_build
+run-name: Build number 1.0.${{ github.run_number }}
+
+on:   
+  workflow_dispatch:      
+
+jobs:
+  build_and_push_artifactory:
+      name: Build
+      runs-on: ubuntu-latest
+      strategy:
+        fail-fast: false
+        # matrix:
+        #   package:
+        #     - opsgenie_client
+        #     - vault
+        #     - db_query
+  
+      steps:
+        - uses: actions/checkout@v3
+  
+        - name: Setup Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: "3.12"
+  
+
+        - name: Install dependencies  
+          run: |
+          export ARTIFACTORY_USERNAME=ibraim.rakhimdzhanov@gmail.com
+          export ARTIFACTORY_URL='testingibraimjfrog.jfrog.io/artifactory/api/pypi/python-pypi-local/simple'
+          export ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD}}
+          mkdir -p ~/.pip
+          echo "[global]" > ~/.pip/pip.conf
+          echo "index-url = https://${ARTIFACTORY_USERNAME}:${ARTIFACTORY_PASSWORD}@${ARTIFACTORY_URL}" >> ~/.pip/pip.conf
+          pip install --target ./package -r requirements.txt
+          ls ./package

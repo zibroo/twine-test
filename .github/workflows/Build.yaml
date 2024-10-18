@@ -27,5 +27,5 @@ jobs:
             echo "[global]" > ~/.pip/pip.conf
             echo "index-url = https://${ARTIFACTORY_USERNAME}:${ARTIFACTORY_PASSWORD}@${ARTIFACTORY_URL}" >> ~/.pip/pip.conf
             python -m pip install --upgrade pip 
-            python3 -m pip install --target ./package vault==3.0
+            python3 -m pip install --target ./package vault
             ls ./package

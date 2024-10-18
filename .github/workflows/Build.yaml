@@ -8,14 +8,7 @@ jobs:
   build_and_push_artifactory:
       name: Build
       runs-on: ubuntu-latest
-      strategy:
-        fail-fast: false
-        # matrix:
-        #   package:
-        #     - opsgenie_client
-        #     - vault
-        #     - db_query
-  
+
       steps:
         - uses: actions/checkout@v3
   

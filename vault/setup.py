@@ -4,7 +4,7 @@ from setuptools import setup
  
 setup(
     name='vault',
-    version='1.0',
+    version='4.0',
     description='Vault authentication and secret retrieval utility',
     author='JFrog',
     author_email='jfrog@jfrog.com',

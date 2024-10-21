@@ -11,8 +11,8 @@ setup(
     license='MIT',
     packages=['vault'],
     install_requires=[
-            'markdown',
-            'requests'
+            'markdown==3.7',
+            'requests==2.32.3'
       ],
     python_requires='>=3.8',
     zip_safe=False

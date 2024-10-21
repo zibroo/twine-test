@@ -1,4 +1,4 @@
-name: shared_tools_build
+name: depends
 run-name: Build number 1.0.${{ github.run_number }}
 
 on:   
@@ -29,3 +29,50 @@ jobs:
             python -m pip install --upgrade pip 
             python3 -m pip install --target ./package -r requirements.txt
             ls ./package
+
+
+name: shared_tools_build
+run-name: Build number 1.0.${{ github.run_number }}
+
+on:   
+  workflow_dispatch:      
+
+jobs:
+  build_and_push_artifactory:
+      name: Build
+      runs-on: ubuntu-latest
+      strategy:
+        fail-fast: false
+        matrix:
+          package:
+            - vault
+  
+      steps:
+        - uses: actions/checkout@v3
+  
+        - name: Setup Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: "3.12"
+  
+        - name: Install dependencies  
+          run: |
+            cd ${{ matrix.package }}
+            python -m pip install --upgrade pip
+            pip install setuptools wheel twine
+        - name: Build the package
+          run: |
+            cd ${{ matrix.package }}
+            python setup.py sdist bdist_wheel
+        - name: Publish to JFrog Artifactory
+          env:
+            TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+            TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
+          run: |
+            cd ${{ matrix.package }}
+            twine upload --repository-url ${{ secrets.ARTIFACTORY_URL}} \
+            dist/*
+        - name: Clean up build artifacts
+          run: |
+            cd ${{ matrix.package }}
+            rm -rf dist build *.egg-info

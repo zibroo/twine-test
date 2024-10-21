@@ -1,2 +1,1 @@
-markdown
-vault == 3.0
+vault==3.0

@@ -1,2 +1,2 @@
-markdown==3.7 
-vault==4.0 -i https://pypi.org/simple
+markdown==3.7 -i https://pypi.org/simple 
+vault==4.0 

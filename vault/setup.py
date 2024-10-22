@@ -15,6 +15,9 @@ setup(
             'requests==2.32.3',
             'hvac==2.3.0'
       ],
+    dependency_links=[
+        'https://pypi.org/simple'
+    ]
     python_requires='>=3.8',
     zip_safe=False
 )

@@ -1,1 +1,1 @@
-vaultt==7.1.0
+vaultt==7.1

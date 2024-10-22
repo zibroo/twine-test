@@ -12,7 +12,7 @@ jobs:
         fail-fast: false
         matrix:
           package:
-            - vaultt
+            - vault
   
       steps:
         - uses: actions/checkout@v3
@@ -21,75 +21,123 @@ jobs:
           uses: actions/setup-python@v2
           with:
             python-version: "3.12"
-
-        - name: Setup JFrog CLI
-          uses: jfrog/setup-jfrog-cli@v3
-          env:  
-            JF_URL: ${{ secrets.ARTIFACTORY_URL }}
-            JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_PASSWORD }}
-
-        - name: Set CLI Config
-          run: |
-            cd ${{ matrix.package }}
-            jf pip-config --global=true --repo-resolve=python-pypi
-            jf pip install .
-
+  
         - name: Install dependencies  
           run: |
             cd ${{ matrix.package }}
             python -m pip install --upgrade pip
-            pip install poetry
+            pip install setuptools wheel twine
         - name: Build the package
           run: |
             cd ${{ matrix.package }}
-            python -m poetry build
-            jf rt upload dist/ python-pypi/
+            python setup.py sdist bdist_wheel
+        - name: Publish to JFrog Artifactory
+          env:
+            TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+            TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
+          run: |
+            cd ${{ matrix.package }}
+            pip install --target ./dist -r requirements.txt 
+            twine upload --repository-url ${{ secrets.ARTIFACTORY_URL}} \
+            dist/*
+        - name: Clean up build artifacts
+          run: |
+            cd ${{ matrix.package }}
+            rm -rf dist build *.egg-info
 
-        # - name: Publish to JFrog Artifactory
-        #   env:
-        #     ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-        #     ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-        #   run: |
-        #     cd ${{ matrix.package }}
-        #     poetry source add --priority=supplemental jfrog ${{ secrets.ARTIFACTORY_URL }}
-        #     poetry config http-basic.jfrog $ARTIFACTORY_USERNAME $ARTIFACTORY_PASSWORD
-        #     python -m poetry publish
-        # - name: Clean up build artifacts
-        #   run: |
-        #     cd ${{ matrix.package }}
-        #     rm -rf dist build *.egg-info
+
+# name: shared_tools_build
+# run-name: Build number 1.0.${{ github.run_number }}
+
+# on:   
+#   workflow_dispatch:      
+
+# jobs:
+#   build_and_push_artifactory:
+#       name: Build
+#       runs-on: ubuntu-latest
+#       strategy:
+#         fail-fast: false
+#         matrix:
+#           package:
+#             - vaultt
+  
+#       steps:
+#         - uses: actions/checkout@v3
+  
+#         - name: Setup Python
+#           uses: actions/setup-python@v2
+#           with:
+#             python-version: "3.12"
+
+#         - name: Setup JFrog CLI
+#           uses: jfrog/setup-jfrog-cli@v3
+#           env:  
+#             JF_URL: ${{ secrets.ARTIFACTORY_URL }}
+#             JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
+#         - name: Set CLI Config
+#           run: |
+#             cd ${{ matrix.package }}
+#             jf pip-config --global=true --repo-resolve=python-pypi
+#             jf pip install .
+
+#         - name: Install dependencies  
+#           run: |
+#             cd ${{ matrix.package }}
+#             python -m pip install --upgrade pip
+#             pip install poetry
+#         - name: Build the package
+#           run: |
+#             cd ${{ matrix.package }}
+#             python -m poetry build
+#             jf rt upload dist/ python-pypi/
+
+#         # - name: Publish to JFrog Artifactory
+#         #   env:
+#         #     ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+#         #     ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+#         #   run: |
+#         #     cd ${{ matrix.package }}
+#         #     poetry source add --priority=supplemental jfrog ${{ secrets.ARTIFACTORY_URL }}
+#         #     poetry config http-basic.jfrog $ARTIFACTORY_USERNAME $ARTIFACTORY_PASSWORD
+#         #     python -m poetry publish
+#         # - name: Clean up build artifacts
+#         #   run: |
+#         #     cd ${{ matrix.package }}
+#         #     rm -rf dist build *.egg-info
 
 
 
          
-      #  - name: Publish Build info With JFrog CLI
-      #    run: |
-      #     # Collect environment variables for the build
-      #     jf rt build-collect-env
-      #     # Collect VCS details from git and add them to the build
-      #     jf rt build-add-git
-      #     # Publish build info
-      #     jf rt build-publish
+#       #  - name: Publish Build info With JFrog CLI
+#       #    run: |
+#       #     # Collect environment variables for the build
+#       #     jf rt build-collect-env
+#       #     # Collect VCS details from git and add them to the build
+#       #     jf rt build-add-git
+#       #     # Publish build info
+#       #     jf rt build-publish
   
-      #   # - name: Install dependencies  
-        #   run: |
-        #     cd ${{ matrix.package }}
-        #     python -m pip install --upgrade pip
-        #     pip install setuptools wheel twine
-        # - name: Build the package
-        #   run: |
-        #     cd ${{ matrix.package }}
-        #     python setup.py sdist bdist_wheel
-        # - name: Publish to JFrog Artifactory
-        #   env:
-        #     TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-        #     TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
-        #   run: |
-        #     cd ${{ matrix.package }}
-        #     ls dist/
-        #     twine upload --repository-url ${{ secrets.ARTIFACTORY_URL}} \
-        #     dist/*
-        # - name: Clean up build artifacts
-        #   run: |
-        #     cd ${{ matrix.package }}
-        #     rm -rf dist build *.egg-info
+#       #   # - name: Install dependencies  
+#         #   run: |
+#         #     cd ${{ matrix.package }}
+#         #     python -m pip install --upgrade pip
+#         #     pip install setuptools wheel twine
+#         # - name: Build the package
+#         #   run: |
+#         #     cd ${{ matrix.package }}
+#         #     python setup.py sdist bdist_wheel
+#         # - name: Publish to JFrog Artifactory
+#         #   env:
+#         #     TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+#         #     TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
+#         #   run: |
+#         #     cd ${{ matrix.package }}
+#         #     ls dist/
+#         #     twine upload --repository-url ${{ secrets.ARTIFACTORY_URL}} \
+#         #     dist/*
+#         # - name: Clean up build artifacts
+#         #   run: |
+#         #     cd ${{ matrix.package }}
+#         #     rm -rf dist build *.egg-info

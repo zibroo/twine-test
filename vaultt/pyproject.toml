@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vaultt"
-version = "0.1.0"
+version = "7.1.0"
 description = ""
 authors = ["ibraim rakh <ibraim.rakhimdzhanov@gmail.com>"]
 readme = "README.md"

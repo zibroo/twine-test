@@ -22,6 +22,12 @@ jobs:
           with:
             python-version: "3.12"
 
+        - name: Setup JFrog CLI
+          uses: jfrog/setup-jfrog-cli@v3
+          env:  
+            JF_URL: ${{ secrets.ARTIFACTORY_URL }}
+            JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
         - name: Install dependencies  
           run: |
             cd ${{ matrix.package }}
@@ -31,19 +37,35 @@ jobs:
           run: |
             cd ${{ matrix.package }}
             python -m poetry build
-        - name: Publish to JFrog Artifactory
-          env:
-            ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-            ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          run: |
-            cd ${{ matrix.package }}
-            poetry source add --priority=supplemental jfrog ${{ secrets.ARTIFACTORY_URL }}
-            poetry config http-basic.jfrog $ARTIFACTORY_USERNAME $ARTIFACTORY_PASSWORD
-            python -m poetry publish
-        - name: Clean up build artifacts
-          run: |
-            cd ${{ matrix.package }}
-            rm -rf dist build *.egg-info
+            ls
+        # - name: Publish
+        #   run: jf rt upload dist/ python-pypi/
+
+        # - name: Publish to JFrog Artifactory
+        #   env:
+        #     ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+        #     ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+        #   run: |
+        #     cd ${{ matrix.package }}
+        #     poetry source add --priority=supplemental jfrog ${{ secrets.ARTIFACTORY_URL }}
+        #     poetry config http-basic.jfrog $ARTIFACTORY_USERNAME $ARTIFACTORY_PASSWORD
+        #     python -m poetry publish
+        # - name: Clean up build artifacts
+        #   run: |
+        #     cd ${{ matrix.package }}
+        #     rm -rf dist build *.egg-info
+
+
+
+         
+       - name: Publish Build info With JFrog CLI
+         run: |
+          # Collect environment variables for the build
+          jf rt build-collect-env
+          # Collect VCS details from git and add them to the build
+          jf rt build-add-git
+          # Publish build info
+          jf rt build-publish
   
         # - name: Install dependencies  
         #   run: |

@@ -29,7 +29,7 @@ jobs:
             echo "index-url = https://${ARTIFACTORY_USERNAME}:${ARTIFACTORY_PASSWORD}@${ARTIFACTORY_URL}" >> ~/.pip/pip.conf
             python3 -m pip install --target ./package -r requirements.txt  --no-deps
             ls ./package/vault
-            # pip install --target ./package -r ./package/vault-7.1.dist-info/requires.txt -i https://pypi.org/simple
-            # ls ./package
+            pip install --target ./package -r ./package/vault/requirements.txt -i https://pypi.org/simple
+            ls ./package
 
 

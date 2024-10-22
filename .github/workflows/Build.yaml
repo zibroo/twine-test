@@ -21,11 +21,9 @@ jobs:
         - name: Install dependencies  
           run: |
             sudo pip install --upgrade pip 
-            pip install markdown==3.7
             export ARTIFACTORY_USERNAME=ibraim.rakhimdzhanov@gmail.com
             export ARTIFACTORY_URL='testingibraimjfrog.jfrog.io/artifactory/api/pypi/python-pypi-local/simple'
             export ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD}}
-            python3 -m pip install hvac==2.3.0
             mkdir -p ~/.pip
             echo "[global]" > ~/.pip/pip.conf
             echo "index-url = https://${ARTIFACTORY_USERNAME}:${ARTIFACTORY_PASSWORD}@${ARTIFACTORY_URL}" >> ~/.pip/pip.conf

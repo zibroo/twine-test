@@ -58,16 +58,16 @@ jobs:
 
 
          
-       - name: Publish Build info With JFrog CLI
-         run: |
-          # Collect environment variables for the build
-          jf rt build-collect-env
-          # Collect VCS details from git and add them to the build
-          jf rt build-add-git
-          # Publish build info
-          jf rt build-publish
+      #  - name: Publish Build info With JFrog CLI
+      #    run: |
+      #     # Collect environment variables for the build
+      #     jf rt build-collect-env
+      #     # Collect VCS details from git and add them to the build
+      #     jf rt build-add-git
+      #     # Publish build info
+      #     jf rt build-publish
   
-        # - name: Install dependencies  
+      #   # - name: Install dependencies  
         #   run: |
         #     cd ${{ matrix.package }}
         #     python -m pip install --upgrade pip

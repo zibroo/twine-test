@@ -10,7 +10,7 @@ if os.path.isfile(requirement_path):
         install_requires = f.read().splitlines()
 setup(
     name='vault',
-    version='7.0',
+    version='7.1',
     description='Vault authentication and secret retrieval utility',
     author='JFrog',
     author_email='jfrog@jfrog.com',

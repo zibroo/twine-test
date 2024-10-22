@@ -25,10 +25,10 @@ jobs:
             export ARTIFACTORY_USERNAME=ibraim.rakhimdzhanov@gmail.com
             export ARTIFACTORY_URL='testingibraimjfrog.jfrog.io/artifactory/api/pypi/python-pypi-local/simple'
             export ARTIFACTORY_PASSWORD=${{ secrets.ARTIFACTORY_PASSWORD}}
+            python3 -m pip install hvac==2.3.0
             mkdir -p ~/.pip
             echo "[global]" > ~/.pip/pip.conf
             echo "index-url = https://${ARTIFACTORY_USERNAME}:${ARTIFACTORY_PASSWORD}@${ARTIFACTORY_URL}" >> ~/.pip/pip.conf
-            python3 -m pip install hvac==2.3.0
             python3 -m pip install --target ./package -r requirements.txt 
             ls ./package
 

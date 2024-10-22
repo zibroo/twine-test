@@ -20,7 +20,7 @@ jobs:
 
         - name: Install dependencies  
           run: |
-            python -m pip install --upgrade pip 
+            sudo pip install --upgrade pip 
             pip install markdown==3.7
             export ARTIFACTORY_USERNAME=ibraim.rakhimdzhanov@gmail.com
             export ARTIFACTORY_URL='testingibraimjfrog.jfrog.io/artifactory/api/pypi/python-pypi-local/simple'

@@ -28,6 +28,12 @@ jobs:
             JF_URL: ${{ secrets.ARTIFACTORY_URL }}
             JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
+        - name: Set CLI Config
+          run: |
+            cd ${{ matrix.package }}
+            jf pip-config --global=true --repo-resolve=python-pypi
+            jf pip install .
+
         - name: Install dependencies  
           run: |
             cd ${{ matrix.package }}
@@ -37,9 +43,7 @@ jobs:
           run: |
             cd ${{ matrix.package }}
             python -m poetry build
-            ls
-        - name: Publish
-          run: jf rt upload dist/ python-pypi/
+            jf rt upload dist/ python-pypi/
 
         # - name: Publish to JFrog Artifactory
         #   env:

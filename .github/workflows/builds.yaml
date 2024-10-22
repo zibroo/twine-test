@@ -37,6 +37,7 @@ jobs:
             TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
           run: |
             cd ${{ matrix.package }}
+            ls dist/
             twine upload --repository-url ${{ secrets.ARTIFACTORY_URL}} \
             dist/*
         - name: Clean up build artifacts

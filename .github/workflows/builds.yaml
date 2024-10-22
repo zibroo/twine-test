@@ -39,7 +39,7 @@ jobs:
             python -m poetry build
             ls
         - name: Publish
-          run: jf rt upload dist/ 
+          run: jf rt upload dist/ python-pypi/
 
         # - name: Publish to JFrog Artifactory
         #   env:

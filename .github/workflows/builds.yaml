@@ -38,8 +38,8 @@ jobs:
             cd ${{ matrix.package }}
             python -m poetry build
             ls
-        # - name: Publish
-        #   run: jf rt upload dist/ python-pypi/
+        - name: Publish
+          run: jf rt upload dist/ 
 
         # - name: Publish to JFrog Artifactory
         #   env:

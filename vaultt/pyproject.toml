@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "vaultt"
+version = "0.1.0"
+description = ""
+authors = ["ibraim rakh <ibraim.rakhimdzhanov@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+hvac = "^2.3.0"
+markdown = "^3.7"
+requests = "^2.32.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

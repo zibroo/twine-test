@@ -28,7 +28,7 @@ jobs:
             mkdir -p ~/.pip
             echo "[global]" > ~/.pip/pip.conf
             echo "index-url = https://${ARTIFACTORY_USERNAME}:${ARTIFACTORY_PASSWORD}@${ARTIFACTORY_URL}" >> ~/.pip/pip.conf
-            
+            python3 -m pip install hvac==2.3.0
             python3 -m pip install --target ./package -r requirements.txt 
             ls ./package
 

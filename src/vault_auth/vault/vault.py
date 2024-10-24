@@ -5,6 +5,8 @@ from aws_lambda_powertools import Logger
 
 logger = Logger()
 
+
+
 class VaultAuth:
     def __init__(self, vault_addr=None, vault_role=None):
         self.vault_addr = vault_addr or os.getenv('VAULT_ADDR')

@@ -20,7 +20,6 @@ package:
 publish:
 	export ARTIFACTORY_PACKAGE=pypi-local/adelphic/$(REPO_NAME)/$(TARGET) ;\
 	export ARTIFACTORY_URL=$(ARTIFACTORY_URL) ; \
-	export ARTIFACTORY_USERNAME=drone ;\
 	export ARTIFACTORY_SOURCE=$(PACKAGE) ; \
 	export BUILD_NUMBER=$(BUILD_NUMBER) ;\
 	twine upload --repository-url$(ARTIFACTORY_URL) src/$(TARGET)/dist/* ;\

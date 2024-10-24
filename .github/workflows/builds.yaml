@@ -34,9 +34,11 @@ jobs:
       - name: Check for changes in src/db_query
         id: db_query_changes
         run: |
-          ls
-          pwd 
-          git diff --quiet HEAD^ HEAD src/db_query/ || echo "db_query"
+          if git rev-parse HEAD^ >/dev/null 2>&1; then
+            git diff --quiet HEAD^ HEAD src/db_query/ || echo "db_query"
+          else
+            git diff --quiet $(git rev-list --max-parents=0 HEAD) src/db_query/ || echo "db_query"
+          fi
       
       - name: Check for changes in src/opsgenie_client
         id: opsgenie_client_changes

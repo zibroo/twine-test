@@ -25,8 +25,8 @@ jobs:
         with:
           python-version: "3.11"
       
-      # - name: Setup Git access
-      #   run: git config --global url.https://${{ secrets.GHA_ACCESS_TOKEN }}@github.vianttech.com/.insteadOf https://github.vianttech.com/
+      - name: Setup Git access
+        run: git config --global url.https://${{ secrets.GHA_ACCESS_TOKEN }}@github.com/zibroo.insteadOf https://github.com/zibroo/
   
       # - name: secrets
       #   run: v ARTIFACTORY_PASSWORD secret/service/artifactory/drone value

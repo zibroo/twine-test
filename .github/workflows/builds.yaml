@@ -33,31 +33,45 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Set matrix for changed tools
-        id: set-matrix
-        run: |
-          TOOLS=""
-          if [ ${{ steps.changes.outputs.db_query }} == 'true' ]; then TOOLS="${TOOLS} db_query"; fi
-          if [ ${{ steps.changes.outputs.vault_auth }} == 'true' ]; then TOOLS="${TOOLS} vault_auth"; fi
-          if [ ${{ steps.changes.outputs.opsgenie_client }} == 'true' ]; then TOOLS="${TOOLS} opsgenie_client"; fi
-          echo "::set-output name=matrix::{\"tool\": [${TOOLS}]}"
-          echo $TOOLS
+      # - name: Set matrix for changed tools
+      #   id: set-matrix
+      #   run: |
+      #     TOOLS=""
+      #     if [ ${{ steps.changes.outputs.db_query }} == 'true' ]; then TOOLS="${TOOLS} db_query"; fi
+      #     if [ ${{ steps.changes.outputs.vault_auth }} == 'true' ]; then TOOLS="${TOOLS} vault_auth"; fi
+      #     if [ ${{ steps.changes.outputs.opsgenie_client }} == 'true' ]; then TOOLS="${TOOLS} opsgenie_client"; fi
+      #     echo "::set-output name=matrix::{\"tool\": [${TOOLS}]}"
+      #     echo $TOOLS
         
-      - name: Get version from setup.py
-        id: get-version
-        run: |
-          VERSION=$(grep -Po '(?<=version=")[^"]*' src/${{ matrix.tool }}/setup.py)
-          echo "::set-output name=version::$VERSION"
+      # - name: Get version from setup.py
+      #   id: get-version
+      #   run: |
+      #     VERSION=$(grep -Po '(?<=version=")[^"]*' src/${{ matrix.tool }}/setup.py)
+      #     echo "::set-output name=version::$VERSION"
 
-      - name: Package and publish
-        if: ${{ steps.set-matrix.outputs.matrix }}
+      - name: Get version from setup.py for vault_auth
+        id: get-version-vault
+        if: steps.changes.outputs.vault_auth == 'true'
         env:
           TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
         run: |
-          make package target=${{ matrix.tool }} build_number=${{ steps.get-version.outputs.version }}
-          make publish target=${{ matrix.tool }} build_number=${{ steps.get-version.outputs.version }} url=${{ secrets.ARTIFACTORY_URL }}
+          VERSION=$(grep -Po '(?<=version=")[^"]*' src/vault_auth/setup.py)
+          echo "::set-output name=version::$VERSION"
+          make package target='vault_auth' build_number=${{ steps.get-version.outputs.version }}
+          make publish target='vault_auth' build_number=${{ steps.get-version.outputs.version }} url=${{ secrets.ARTIFACTORY_URL }}
 
+      - name: Get version from setup.py for vault_auth
+        id: get-version-vault
+        if: steps.changes.outputs.db_query == 'true'
+        env:
+          TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
+        run: |
+          VERSION=$(grep -Po '(?<=version=")[^"]*' src/db_query/setup.py)
+          echo "::set-output name=version::$VERSION"
+          make package target='db_query' build_number=${{ steps.get-version.outputs.version }}
+          make publish target='db_query' build_number=${{ steps.get-version.outputs.version }} url=${{ secrets.ARTIFACTORY_URL }}
 
 
 # name: shared_tools_build

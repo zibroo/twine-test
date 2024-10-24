@@ -69,9 +69,8 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
         run: |
           VERSION=$(grep -Po '(?<=version=")[^"]*' src/db_query/setup.py)
-          echo "::set-output name=version::$VERSION"
-          make package target='db_query' build_number=${{ steps.get-version.outputs.version }}
-          make publish target='db_query' build_number=${{ steps.get-version.outputs.version }} url=${{ secrets.ARTIFACTORY_URL }}
+          make package target='db_query' build_number=$VERSION
+          make publish target='db_query' build_number=$VERSION url=${{ secrets.ARTIFACTORY_URL }}
 
 
 # name: shared_tools_build

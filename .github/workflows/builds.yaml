@@ -41,6 +41,7 @@ jobs:
           if [ ${{ steps.changes.outputs.vault_auth }} == 'true' ]; then TOOLS="${TOOLS} vault_auth"; fi
           if [ ${{ steps.changes.outputs.opsgenie_client }} == 'true' ]; then TOOLS="${TOOLS} opsgenie_client"; fi
           echo "::set-output name=matrix::{\"tool\": [${TOOLS}]}"
+          echo $TOOLS
         
       - name: Get version from setup.py
         id: get-version

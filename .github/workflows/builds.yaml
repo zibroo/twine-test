@@ -15,7 +15,7 @@ on:
 jobs:
   build_and_push_artifactory:
     name: Build
-    runs-on: [self-hosted, X64]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3

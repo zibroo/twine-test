@@ -62,7 +62,7 @@ jobs:
           make publish target='vault_auth' build_number=${{ steps.get-version.outputs.version }} url=${{ secrets.ARTIFACTORY_URL }}
 
       - name: Get version from setup.py for vault_auth
-        id: get-version-vault
+        id: get-version-db
         if: steps.changes.outputs.db_query == 'true'
         env:
           TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}

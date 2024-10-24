@@ -56,7 +56,7 @@ jobs:
           TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
         run: |
-          VERSION=$(grep -Po '(?<=version=")[^"]*' src/vault_auth/setup.py)
+          VERSION=$(sed -n 's/^ *version *= *["'\'']\([^"'\'']*\)["'\''].*$/\1/p' src/vault_auth/setup.py)
           echo "::set-output name=version::$VERSION"
           make package target='vault_auth' build_number=${{ steps.get-version.outputs.version }}
           make publish target='vault_auth' build_number=${{ steps.get-version.outputs.version }} url=${{ secrets.ARTIFACTORY_URL }}
@@ -68,7 +68,7 @@ jobs:
           TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
         run: |
-          VERSION=$(grep -Po '(?<=version=")[^"]*' src/db_query/setup.py)
+          VERSION=$(sed -n 's/^ *version *= *["'\'']\([^"'\'']*\)["'\''].*$/\1/p' src/db_query/setup.py)
           make package target='db_query' build_number=$VERSION
           make publish target='db_query' build_number=$VERSION url=${{ secrets.ARTIFACTORY_URL }}
 

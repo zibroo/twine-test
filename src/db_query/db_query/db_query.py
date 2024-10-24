@@ -4,6 +4,8 @@ from aws_lambda_powertools import Logger
 
 logger = Logger()
 
+
+
 class DatabaseQuery:
     def __init__(self, credentials):
         self.credentials = credentials

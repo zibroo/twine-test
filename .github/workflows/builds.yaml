@@ -19,44 +19,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            db_query:
+              - 'src/db_query/**'
+            vault_auth:
+              - 'src/vault_auth/**'
 
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: "3.11"
-      
-      - name: Setup Git access
-        run: git config --global url.https://${{ secrets.GHA_ACCESS_TOKEN }}@github.com/zibroo.insteadOf https://github.com/zibroo/
-  
-      # - name: secrets
-      #   run: v ARTIFACTORY_PASSWORD secret/service/artifactory/drone value
-
-      - name: Check for changes in src/db_query
-        id: db_query_changes
-        run: |
-          if git rev-parse HEAD^ >/dev/null 2>&1; then
-            git diff --quiet HEAD^ HEAD src/db_query/ || echo "db_query"
-          else
-            git diff --quiet $(git rev-list --max-parents=0 HEAD) src/db_query/ || echo "db_query"
-          fi
-      
-      - name: Check for changes in src/opsgenie_client
-        id: opsgenie_client_changes
-        run: |
-          git diff --quiet HEAD^ HEAD src/opsgenie_client/ || echo "opsgenie_client"
-      
-      - name: Check for changes in src/vault_auth
-        id: vault_auth_changes
-        run: |
-          git diff --quiet HEAD^ HEAD src/vault_auth/ || echo "vault_auth"
 
       - name: Set matrix for changed tools
         id: set-matrix
         run: |
           TOOLS=""
-          if [ -n "$(steps.db_query_changes.outputs.result)" ]; then TOOLS="${TOOLS} db_query"; fi
-          if [ -n "$(steps.opsgenie_client_changes.outputs.result)" ]; then TOOLS="${TOOLS} opsgenie_client"; fi
-          if [ -n "$(steps.vault_auth_changes.outputs.result)" ]; then TOOLS="${TOOLS} vault_auth"; fi
+          if [ ${{ steps.changes.outputs.db_query }} == 'true' ]; then TOOLS="${TOOLS} db_query"; fi
+          if [ ${{ steps.changes.outputs.vault_auth }} == 'true' ]; then TOOLS="${TOOLS} vault_auth"; fi
+          if [ ${{ steps.changes.outputs.opsgenie_client }} == 'true' ]; then TOOLS="${TOOLS} opsgenie_client"; fi
           echo "::set-output name=matrix::{\"tool\": [${TOOLS}]}"
         
       - name: Get version from setup.py

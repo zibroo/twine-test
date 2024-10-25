@@ -22,7 +22,7 @@ publish:
 	export ARTIFACTORY_URL=$(ARTIFACTORY_URL) ; \
 	export ARTIFACTORY_SOURCE=$(PACKAGE) ; \
 	export BUILD_NUMBER=$(BUILD_NUMBER) ;\
-	twine upload --repository-url$(ARTIFACTORY_URL) src/$(TARGET)/dist/* ;\
+	twine upload --repository-url $(ARTIFACTORY_URL) src/$(TARGET)/dist/* ;\
 	
 
 all: package

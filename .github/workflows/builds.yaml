@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@v3
         id: changes
         with:
           filters: |
@@ -49,9 +49,7 @@ jobs:
       #     VERSION=$(grep -Po '(?<=version=")[^"]*' src/${{ matrix.tool }}/setup.py)
       #     echo "::set-output name=version::$VERSION"
 
-      - name: Get version from setup.py for vault_auth
-        id: get-version-vault
-        if: steps.changes.outputs.vault_auth == 'true'
+      - if: steps.changes.outputs.vault_auth == 'true'
         env:
           TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
@@ -63,9 +61,7 @@ jobs:
 
 
 
-      - name: Get version from setup.py for vault_auth
-        id: get-version-db
-        if: steps.changes.outputs.db_query == 'true'
+      - if: steps.changes.outputs.db_query == 'true'
         env:
           TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}

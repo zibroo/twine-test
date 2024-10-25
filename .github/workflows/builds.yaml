@@ -13,6 +13,12 @@ jobs:
   build_and_push_artifactory:
     name: Build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - vault_auth
+          - db_query
 
     steps:
       - uses: actions/checkout@v3
@@ -21,9 +27,7 @@ jobs:
         with:
           filters: |
             db_query:
-              - 'src/db_query/**'
-            vault_auth:
-              - 'src/vault_auth/**'
+              - 'src/${{ matrix.package }}/**'
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -46,28 +50,28 @@ jobs:
       #     VERSION=$(grep -Po '(?<=version=")[^"]*' src/${{ matrix.tool }}/setup.py)
       #     echo "::set-output name=version::$VERSION"
 
-      - if: steps.changes.outputs.vault_auth == 'true'
+      - if: steps.changes.outputs.${{ matrix.package }} == 'true'
         env:
           TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
         run: |
-          VERSION=$(sed -n 's/^ *version *= *["'\'']\([^"'\'']*\)["'\''].*$/\1/p' src/vault_auth/setup.py)
+          VERSION=$(sed -n 's/^ *version *= *["'\'']\([^"'\'']*\)["'\''].*$/\1/p' src/${{ matrix.package }}/setup.py)
           echo "::set-output name=version::$VERSION"
-          make package target='vault_auth' build_number=${{ steps.get-version.outputs.version }}
-          make publish target='vault_auth' build_number=${{ steps.get-version.outputs.version }} url=${{ secrets.ARTIFACTORY_URL }}
+          make package target='${{ matrix.package }}' build_number=${{ steps.get-version.outputs.version }}
+          make publish target='${{ matrix.package }}' build_number=${{ steps.get-version.outputs.version }} url=${{ secrets.ARTIFACTORY_URL }}
 
 
 
 
 
-      - if: steps.changes.outputs.db_query == 'true'
-        env:
-          TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
-        run: |
-          VERSION=$(sed -n 's/^ *version *= *["'\'']\([^"'\'']*\)["'\''].*$/\1/p' src/db_query/setup.py)
-          make package target='db_query' build_number=$VERSION
-          make publish target='db_query' build_number=$VERSION url=${{ secrets.ARTIFACTORY_URL }}
+      # - if: steps.changes.outputs.db_query == 'true'
+      #   env:
+      #     TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+      #     TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}
+      #   run: |
+      #     VERSION=$(sed -n 's/^ *version *= *["'\'']\([^"'\'']*\)["'\''].*$/\1/p' src/db_query/setup.py)
+      #     make package target='db_query' build_number=$VERSION
+      #     make publish target='db_query' build_number=$VERSION url=${{ secrets.ARTIFACTORY_URL }}
 
 
 # name: shared_tools_build

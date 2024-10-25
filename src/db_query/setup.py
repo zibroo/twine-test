@@ -6,7 +6,7 @@ from setuptools import setup
  
 setup(
     name='db_query',
-    version='1.0',
+    version='9.0',
     description='Utility for querying a database',
     author='JFrog',
     author_email='jfrog@jfrog.com',

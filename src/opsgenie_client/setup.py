@@ -2,9 +2,10 @@
  
 from setuptools import setup
  
+
 setup(
     name='opsgenie_client',
-    version='1.0',
+    version='9.0',
     description='Opsgenie Client used to send alerts',
     url='https://github.vianttech.com/techops/opsgenie-client',
     author='JFrog',
@@ -18,3 +19,5 @@ setup(
     python_requires='>=3.8',
     zip_safe=False
 )
+
+

@@ -50,7 +50,8 @@ jobs:
       #     VERSION=$(grep -Po '(?<=version=")[^"]*' src/${{ matrix.tool }}/setup.py)
       #     echo "::set-output name=version::$VERSION"
 
-      - if: steps.changes.outputs.package == 'true'
+      - name: Test
+        if: steps.changes.outputs.package == 'true'
         env:
           TWINE_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.ARTIFACTORY_API_KEY }}

@@ -4,7 +4,7 @@ name: Build and Publish Utility Tools
 on:
   push:
     paths:
-      - '.github/workflows/ci.yaml'   # Trigger when ci.yaml is modified
+      - '.github/workflows/builds.yaml'   # Trigger when ci.yaml is modified
       - 'Makefile'                    # Trigger when Makefile is modified
       - 'src/**'                      # Trigger when any file in the src directory is modified
   workflow_dispatch: 
